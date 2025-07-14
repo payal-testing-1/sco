@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, CreditCard, CheckCircle, Smartphone, Gift, Plus, Minus } from 'lucide-react';
+import { X, CreditCard, CheckCircle, Smartphone, Gift, Download, Mail, Check } from 'lucide-react';
 import { CartItem } from '../types';
 
 interface CheckoutModalProps {
@@ -21,6 +21,8 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState<{code: string, discount: number} | null>(null);
   const [showBill, setShowBill] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+  const [receiptDownloaded, setReceiptDownloaded] = useState(false);
 
   if (!isOpen) return null;
 
@@ -29,6 +31,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const shipping = subtotal > 35 ? 0 : 5.99; // Free shipping over $35
   const couponDiscount = appliedCoupon ? (subtotal * appliedCoupon.discount / 100) : 0;
   const total = subtotal + tax + shipping - couponDiscount;
+  const orderNumber = `AMZ-${Date.now().toString().slice(-8)}`;
 
   const handleApplyCoupon = () => {
     const validCoupons = {
@@ -50,15 +53,68 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
     setTimeout(() => {
       setIsProcessing(false);
       setIsComplete(true);
+      // Simulate email sending
       setTimeout(() => {
+        setEmailSent(true);
         setShowBill(true);
       }, 2000);
     }, 2000);
   };
 
+  const handleDownloadReceipt = () => {
+    // Simulate receipt download
+    const receiptContent = generateReceiptContent();
+    const blob = new Blob([receiptContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Amazon_Receipt_${orderNumber}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    setReceiptDownloaded(true);
+  };
+
+  const generateReceiptContent = () => {
+    return `
+AMAZON RECEIPT
+Order #${orderNumber}
+Date: ${new Date().toLocaleDateString('en-US', { 
+  weekday: 'long', 
+  year: 'numeric', 
+  month: 'long', 
+  day: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit'
+})}
+
+DELIVERY ADDRESS:
+John Smith
+123 Main Street, Apt 4B
+New York, NY 10001
+United States
+
+ITEMS ORDERED:
+${cartItems.map(item => `${item.product.name} x${item.quantity} - $${(item.product.price * item.quantity).toFixed(2)}`).join('\n')}
+
+PAYMENT SUMMARY:
+Subtotal: $${subtotal.toFixed(2)}
+${appliedCoupon ? `Coupon (${appliedCoupon.code}): -$${couponDiscount.toFixed(2)}\n` : ''}Shipping: ${shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}
+Tax: $${tax.toFixed(2)}
+Total: $${total.toFixed(2)}
+
+Payment Method: ${paymentMethods.find(p => p.id === selectedPayment)?.name}
+
+Thank you for shopping with Amazon!
+    `.trim();
+  };
+
   const handleCloseBill = () => {
     setShowBill(false);
     setIsComplete(false);
+    setEmailSent(false);
+    setReceiptDownloaded(false);
     onOrderComplete();
   };
 
@@ -73,7 +129,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
     <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b sticky top-0 bg-white">
+        <div className="flex items-center justify-between p-4 border-b sticky top-0 bg-white z-10">
           <h2 className="text-xl font-bold text-gray-800">
             {showBill ? 'Order Receipt' : 'Checkout'}
           </h2>
@@ -88,10 +144,46 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
         <div className="p-6">
           {showBill ? (
             /* Bill/Receipt */
-            <div className="space-y-4">
+            <div className="space-y-6">
+              {/* Email Notification */}
+              {emailSent && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center space-x-3">
+                  <Mail className="w-5 h-5 text-green-600" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-green-800">Receipt sent to email</p>
+                    <p className="text-xs text-green-600">john.smith@email.com</p>
+                  </div>
+                  <Check className="w-5 h-5 text-green-600" />
+                </div>
+              )}
+
+              {/* Download Receipt Button */}
+              <div className="flex space-x-3">
+                <button
+                  onClick={handleDownloadReceipt}
+                  className={`flex-1 flex items-center justify-center space-x-2 py-3 rounded-lg font-medium transition-colors ${
+                    receiptDownloaded 
+                      ? 'bg-green-100 text-green-700 border border-green-200' 
+                      : 'bg-amazon-orange hover:bg-orange-600 text-white'
+                  }`}
+                >
+                  {receiptDownloaded ? (
+                    <>
+                      <Check className="w-5 h-5" />
+                      <span>Downloaded</span>
+                    </>
+                  ) : (
+                    <>
+                      <Download className="w-5 h-5" />
+                      <span>Download Receipt</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
               <div className="text-center border-b pb-4">
                 <div className="text-2xl font-bold text-green-600 mb-2">Order Confirmed!</div>
-                <div className="text-sm text-gray-600">Order #AMZ-{Date.now().toString().slice(-8)}</div>
+                <div className="text-sm text-gray-600">Order #{orderNumber}</div>
                 <div className="text-sm text-gray-600">{new Date().toLocaleDateString('en-US', { 
                   weekday: 'long', 
                   year: 'numeric', 
@@ -175,59 +267,81 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
             </div>
           ) : !isComplete ? (
             <div>
-              {/* Order Summary */}
-              <div className="mb-6">
-                <h3 className="font-medium mb-3">Order Summary</h3>
+              {/* Enhanced Order Summary Header */}
+              <div className="mb-6 bg-gradient-to-r from-amazon-blue to-blue-600 rounded-lg p-4 text-white">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-lg font-bold">Order Summary</h3>
+                  <div className="bg-white bg-opacity-20 rounded-full px-3 py-1">
+                    <span className="text-sm font-medium">{cartItems.length} item{cartItems.length !== 1 ? 's' : ''}</span>
+                  </div>
+                </div>
                 <div className="space-y-2">
-                  {cartItems.map((item) => (
-                    <div key={item.product.id} className="flex justify-between text-sm">
-                      <span>{item.product.name} x{item.quantity}</span>
-                      <span>${(item.product.price * item.quantity).toFixed(2)}</span>
+                  {cartItems.slice(0, 2).map((item) => (
+                    <div key={item.product.id} className="flex justify-between text-sm opacity-90">
+                      <span className="truncate mr-2">{item.product.name} x{item.quantity}</span>
+                      <span className="font-medium">${(item.product.price * item.quantity).toFixed(2)}</span>
                     </div>
                   ))}
+                  {cartItems.length > 2 && (
+                    <div className="text-sm opacity-75">
+                      +{cartItems.length - 2} more item{cartItems.length - 2 !== 1 ? 's' : ''}
+                    </div>
+                  )}
+                </div>
+                <div className="border-t border-white border-opacity-30 mt-3 pt-3">
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium">Estimated Total:</span>
+                    <span className="text-xl font-bold">${total.toFixed(2)}</span>
+                  </div>
                 </div>
               </div>
 
               {/* Coupon Section */}
               <div className="mb-6">
-                <h3 className="font-medium mb-3">Promo Code</h3>
+                <h3 className="font-medium mb-3 flex items-center">
+                  <Gift className="w-5 h-5 mr-2 text-amazon-orange" />
+                  Promo Code
+                </h3>
                 <div className="flex space-x-2">
                   <input
                     type="text"
                     placeholder="Enter coupon code"
                     value={couponCode}
                     onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                    className="flex-1 border rounded-lg px-3 py-2 text-sm"
+                    className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amazon-orange focus:border-transparent"
                   />
                   <button
                     onClick={handleApplyCoupon}
-                    className="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-medium"
+                    className="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                   >
                     Apply
                   </button>
                 </div>
                 {appliedCoupon && (
-                  <div className="mt-2 text-sm text-green-600 flex items-center">
+                  <div className="mt-2 text-sm text-green-600 flex items-center bg-green-50 rounded-lg p-2">
                     <CheckCircle className="w-4 h-4 mr-1" />
                     Coupon "{appliedCoupon.code}" applied! You saved ${couponDiscount.toFixed(2)}
                   </div>
                 )}
-                <div className="mt-2 text-xs text-gray-500">
-                  Try: SAVE10, WELCOME20, FREESHIP
+                <div className="mt-2 text-xs text-gray-500 bg-gray-50 rounded p-2">
+                  <strong>Try these codes:</strong> SAVE10 (10% off), WELCOME20 (20% off), FREESHIP (Free shipping)
                 </div>
               </div>
 
               {/* Payment Methods */}
               <div className="mb-6">
-                <h3 className="font-medium mb-3">Payment Method</h3>
+                <h3 className="font-medium mb-3 flex items-center">
+                  <CreditCard className="w-5 h-5 mr-2 text-amazon-orange" />
+                  Payment Method
+                </h3>
                 <div className="space-y-2">
                   {paymentMethods.map((method) => (
                     <div
                       key={method.id}
-                      className={`border rounded-lg p-3 cursor-pointer transition-colors ${
+                      className={`border rounded-lg p-3 cursor-pointer transition-all ${
                         selectedPayment === method.id
-                          ? 'border-amazon-orange bg-orange-50'
-                          : 'border-gray-200 hover:border-gray-300'
+                          ? 'border-amazon-orange bg-orange-50 shadow-sm'
+                          : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
                       }`}
                       onClick={() => setSelectedPayment(method.id)}
                     >
@@ -237,13 +351,13 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                           <div className="font-medium">{method.name}</div>
                           <div className="text-sm text-gray-600">{method.description}</div>
                         </div>
-                        <div className={`w-4 h-4 rounded-full border-2 ${
+                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                           selectedPayment === method.id
                             ? 'border-amazon-orange bg-amazon-orange'
                             : 'border-gray-300'
                         }`}>
                           {selectedPayment === method.id && (
-                            <div className="w-2 h-2 bg-white rounded-full m-0.5"></div>
+                            <div className="w-2 h-2 bg-white rounded-full"></div>
                           )}
                         </div>
                       </div>
@@ -254,28 +368,29 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
               {/* Price Breakdown */}
               <div className="mb-6 bg-gray-50 rounded-lg p-4">
+                <h4 className="font-medium mb-3">Price Details</h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span>Subtotal:</span>
+                    <span>Subtotal ({cartItems.reduce((sum, item) => sum + item.quantity, 0)} items):</span>
                     <span>${subtotal.toFixed(2)}</span>
                   </div>
                   {appliedCoupon && (
                     <div className="flex justify-between text-green-600">
-                      <span>Coupon Discount:</span>
+                      <span>Coupon Discount ({appliedCoupon.code}):</span>
                       <span>-${couponDiscount.toFixed(2)}</span>
                     </div>
                   )}
                   <div className="flex justify-between">
-                    <span>Shipping:</span>
+                    <span>Shipping & Handling:</span>
                     <span>{shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Tax:</span>
+                    <span>Tax (8.75%):</span>
                     <span>${tax.toFixed(2)}</span>
                   </div>
-                  <div className="border-t pt-2 flex justify-between font-medium text-base">
-                    <span>Total:</span>
-                    <span className="text-amazon-orange">${total.toFixed(2)}</span>
+                  <div className="border-t border-gray-300 pt-2 flex justify-between font-bold text-base">
+                    <span>Order Total:</span>
+                    <span className="text-amazon-orange text-lg">${total.toFixed(2)}</span>
                   </div>
                 </div>
               </div>
@@ -284,26 +399,31 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
               <button
                 onClick={handlePayment}
                 disabled={isProcessing}
-                className="w-full bg-amazon-orange hover:bg-orange-600 text-white py-3 rounded-lg font-medium transition-colors disabled:opacity-50"
+                className="w-full bg-amazon-orange hover:bg-orange-600 text-white py-4 rounded-lg font-medium text-lg transition-colors disabled:opacity-50 shadow-lg"
               >
                 {isProcessing ? (
                   <div className="flex items-center justify-center space-x-2">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    <span>Processing...</span>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    <span>Processing Payment...</span>
                   </div>
                 ) : (
-                  `Place Order - $${total.toFixed(2)}`
+                  `Place Order • $${total.toFixed(2)}`
                 )}
               </button>
+
+              <div className="mt-3 text-xs text-gray-500 text-center">
+                By placing your order, you agree to Amazon's privacy notice and conditions of use.
+              </div>
             </div>
           ) : (
             <div className="text-center py-8">
               <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-green-700 mb-2">Order Placed Successfully!</h3>
+              <h3 className="text-xl font-bold text-green-700 mb-2">Payment Successful!</h3>
               <p className="text-gray-600 mb-4">Thank you for using Amazon Self Checkout</p>
-              <p className="text-sm text-gray-500">
-                Preparing your receipt...
-              </p>
+              <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
+                <Mail className="w-4 h-4" />
+                <span>Sending receipt to your email...</span>
+              </div>
             </div>
           )}
         </div>

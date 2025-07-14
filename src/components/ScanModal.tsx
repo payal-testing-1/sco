@@ -151,7 +151,7 @@ const ScanModal: React.FC<ScanModalProps> = ({
                   </div>
                   <div className="text-right">
                     <div className="text-lg font-bold text-amazon-orange">
-                      ₹{scannedProduct.price.toLocaleString()}
+                      ${scannedProduct.price.toLocaleString()}
                     </div>
                   </div>
                 </div>
