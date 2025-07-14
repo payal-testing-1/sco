@@ -56,7 +56,7 @@ const AmazonHeader: React.FC = () => {
         <div className="flex items-center text-sm">
           <MapPin className="w-4 h-4 mr-1" />
           <span className="text-gray-200">Deliver to</span>
-          <span className="ml-1 font-medium">Ravi - Bengaluru 560067</span>
+          <span className="ml-1 font-medium">John - New York 10001</span>
           <span className="ml-1 text-gray-300">▼</span>
         </div>
       </div>
@@ -67,7 +67,7 @@ const AmazonHeader: React.FC = () => {
           <Search className="w-5 h-5 text-gray-500 mr-3" />
           <input
             type="text"
-            placeholder="Search Amazon.in"
+            placeholder="Search Amazon"
             className="flex-1 outline-none text-gray-700 text-base"
           />
           <div className="flex items-center space-x-2 ml-3">

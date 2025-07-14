@@ -26,8 +26,8 @@ const AmazonContent: React.FC = () => {
               <span className="text-sm font-medium">Great Indian Festival</span>
             </div>
             <div className="flex items-center space-x-2 mb-2">
-              <span className="text-sm line-through opacity-80">₹81,999</span>
-              <span className="text-xl font-bold">₹39,240</span>
+              <span className="text-sm line-through opacity-80">$1,299</span>
+              <span className="text-xl font-bold">$649</span>
               <span className="bg-red-500 text-white px-1 py-0.5 rounded text-xs">52% off</span>
             </div>
             <p className="text-sm mb-2">Samsung 138 cm (55") QLED TV</p>
@@ -93,11 +93,11 @@ const AmazonContent: React.FC = () => {
         <div className="p-4">
           <ProductCard
             image="https://images.pexels.com/photos/1275229/pexels-photo-1275229.jpeg?auto=compress&cs=tinysrgb&w=300"
-            title="Apple iPhone 14 (128GB) - Blue"
+            title="Apple iPhone 15 (128GB) - Blue"
             rating={4.5}
             reviews={12543}
-            originalPrice={79900}
-            currentPrice={69900}
+            originalPrice={899}
+            currentPrice={829}
             discount={13}
             prime={true}
             delivery="FREE delivery by tomorrow"
@@ -133,7 +133,7 @@ const AmazonContent: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <span className="text-sm text-gray-600">Total: </span>
-              <span className="text-lg font-bold text-amazon-orange">₹72,847</span>
+              <span className="text-lg font-bold text-amazon-orange">$1,279</span>
             </div>
             <button className="bg-amazon-orange text-white px-4 py-2 rounded text-sm font-medium">
               Add all to Cart
@@ -150,11 +150,11 @@ const AmazonContent: React.FC = () => {
         <div className="p-4 space-y-4">
           <ProductCard
             image="https://images.pexels.com/photos/404280/pexels-photo-404280.jpeg?auto=compress&cs=tinysrgb&w=300"
-            title="Samsung Galaxy M36 5G (Sapphire Blue, 128GB)"
+            title="Samsung Galaxy S24 5G (Phantom Black, 128GB)"
             rating={4.3}
             reviews={1250}
-            originalPrice={24999}
-            currentPrice={18999}
+            originalPrice={999}
+            currentPrice={799}
             discount={24}
             prime={true}
             delivery="FREE delivery by tomorrow"
@@ -164,11 +164,11 @@ const AmazonContent: React.FC = () => {
             title="Wireless Bluetooth Headphones with Noise Cancellation"
             rating={4.2}
             reviews={856}
-            originalPrice={4999}
-            currentPrice={2999}
+            originalPrice={499}
+            currentPrice={399}
             discount={40}
             prime={false}
-            delivery="FREE delivery by Wed, 15 Nov"
+            delivery="FREE delivery by Wed, Nov 15"
           />
         </div>
       </div>
@@ -178,8 +178,8 @@ const AmazonContent: React.FC = () => {
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-xl font-bold mb-1">SAMSUNG</h3>
-            <h4 className="text-lg font-semibold mb-1">Galaxy M36 5G</h4>
-            <p className="text-sm opacity-90 mb-2">Starting ₹18,999</p>
+            <h4 className="text-lg font-semibold mb-1">Galaxy S24 5G</h4>
+            <p className="text-sm opacity-90 mb-2">Starting $799</p>
             <div className="flex space-x-2">
               <div className="bg-amazon-orange text-white px-2 py-1 rounded text-xs font-medium">
                 No Cost EMI
@@ -209,17 +209,17 @@ const AmazonContent: React.FC = () => {
             <RecentItem
               image="https://images.pexels.com/photos/161559/background-bitter-breakfast-bright-161559.jpeg?auto=compress&cs=tinysrgb&w=150"
               title="Organic Bananas"
-              price="₹65"
+              price="$2.99"
             />
             <RecentItem
               image="https://images.pexels.com/photos/236010/pexels-photo-236010.jpeg?auto=compress&cs=tinysrgb&w=150"
-              title="Fresh Milk"
-              price="₹58"
+              title="Organic Milk"
+              price="$4.99"
             />
             <RecentItem
               image="https://images.pexels.com/photos/209206/pexels-photo-209206.jpeg?auto=compress&cs=tinysrgb&w=150"
-              title="Whole Wheat Bread"
-              price="₹35"
+              title="Wonder Bread"
+              price="$1.99"
             />
           </div>
         </div>
@@ -279,8 +279,8 @@ const ProductCard: React.FC<{
           <span className="text-xs text-gray-500">({reviews.toLocaleString()})</span>
         </div>
         <div className="flex items-center space-x-2 mb-1">
-          <span className="text-lg font-bold text-gray-900">₹{currentPrice.toLocaleString()}</span>
-          <span className="text-sm text-gray-500 line-through">₹{originalPrice.toLocaleString()}</span>
+          <span className="text-lg font-bold text-gray-900">${currentPrice.toLocaleString()}</span>
+          <span className="text-sm text-gray-500 line-through">${originalPrice.toLocaleString()}</span>
           <span className="text-xs bg-red-500 text-white px-1 py-0.5 rounded">-{discount}%</span>
         </div>
         {prime && (

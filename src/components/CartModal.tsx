@@ -59,7 +59,7 @@ const CartModal: React.FC<CartModalProps> = ({
                       <h3 className="font-medium text-gray-800 text-sm">{item.product.name}</h3>
                       <p className="text-xs text-gray-600">{item.product.category}</p>
                       <p className="text-sm font-bold text-amazon-orange">
-                        ₹{item.product.price.toLocaleString()}
+                        ${item.product.price.toLocaleString()}
                       </p>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -97,7 +97,7 @@ const CartModal: React.FC<CartModalProps> = ({
             <div className="flex justify-between items-center mb-4">
               <span className="text-lg font-medium">Total:</span>
               <span className="text-xl font-bold text-amazon-orange">
-                ₹{total.toLocaleString()}
+                ${total.toFixed(2)}
               </span>
             </div>
             <button
