@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { X, CreditCard, CheckCircle, Smartphone, Gift, Download, Mail, Check } from 'lucide-react';
+import { X, CreditCard, CheckCircle, Smartphone, Gift, Download, Mail, Check, FileText } from 'lucide-react';
 import { CartItem } from '../types';
+import jsPDF from 'jspdf';
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -62,52 +63,93 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
   };
 
   const handleDownloadReceipt = () => {
-    // Simulate receipt download
-    const receiptContent = generateReceiptContent();
-    const blob = new Blob([receiptContent], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Amazon_Receipt_${orderNumber}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    // Generate PDF receipt
+    const pdf = new jsPDF();
+    
+    // Header
+    pdf.setFontSize(20);
+    pdf.setFont(undefined, 'bold');
+    pdf.text('AMAZON RECEIPT', 20, 30);
+    
+    pdf.setFontSize(12);
+    pdf.setFont(undefined, 'normal');
+    pdf.text(`Order #${orderNumber}`, 20, 45);
+    pdf.text(`Date: ${new Date().toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })}`, 20, 55);
+    
+    // Delivery Address
+    pdf.setFont(undefined, 'bold');
+    pdf.text('DELIVERY ADDRESS:', 20, 75);
+    pdf.setFont(undefined, 'normal');
+    pdf.text('John Smith', 20, 85);
+    pdf.text('123 Main Street, Apt 4B', 20, 95);
+    pdf.text('New York, NY 10001', 20, 105);
+    pdf.text('United States', 20, 115);
+    
+    // Items
+    pdf.setFont(undefined, 'bold');
+    pdf.text('ITEMS ORDERED:', 20, 135);
+    pdf.setFont(undefined, 'normal');
+    
+    let yPos = 145;
+    cartItems.forEach((item) => {
+      const itemText = `${item.product.name} x${item.quantity}`;
+      const priceText = `$${(item.product.price * item.quantity).toFixed(2)}`;
+      
+      // Split long product names
+      const maxWidth = 120;
+      const lines = pdf.splitTextToSize(itemText, maxWidth);
+      
+      lines.forEach((line: string, index: number) => {
+        pdf.text(line, 20, yPos);
+        if (index === lines.length - 1) {
+          pdf.text(priceText, 150, yPos);
+        }
+        yPos += 10;
+      });
+      yPos += 5;
+    });
+    
+    // Payment Summary
+    yPos += 10;
+    pdf.setFont(undefined, 'bold');
+    pdf.text('PAYMENT SUMMARY:', 20, yPos);
+    pdf.setFont(undefined, 'normal');
+    
+    yPos += 15;
+    pdf.text(`Subtotal: $${subtotal.toFixed(2)}`, 20, yPos);
+    yPos += 10;
+    
+    if (appliedCoupon) {
+      pdf.text(`Coupon (${appliedCoupon.code}): -$${couponDiscount.toFixed(2)}`, 20, yPos);
+      yPos += 10;
+    }
+    
+    pdf.text(`Shipping: ${shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}`, 20, yPos);
+    yPos += 10;
+    pdf.text(`Tax: $${tax.toFixed(2)}`, 20, yPos);
+    yPos += 10;
+    
+    pdf.setFont(undefined, 'bold');
+    pdf.text(`Total: $${total.toFixed(2)}`, 20, yPos);
+    
+    yPos += 20;
+    pdf.setFont(undefined, 'normal');
+    pdf.text(`Payment Method: ${paymentMethods.find(p => p.id === selectedPayment)?.name}`, 20, yPos);
+    
+    yPos += 20;
+    pdf.setFont(undefined, 'bold');
+    pdf.text('Thank you for shopping with Amazon!', 20, yPos);
+    
+    // Save the PDF
+    pdf.save(`Amazon_Receipt_${orderNumber}.pdf`);
     setReceiptDownloaded(true);
-  };
-
-  const generateReceiptContent = () => {
-    return `
-AMAZON RECEIPT
-Order #${orderNumber}
-Date: ${new Date().toLocaleDateString('en-US', { 
-  weekday: 'long', 
-  year: 'numeric', 
-  month: 'long', 
-  day: 'numeric',
-  hour: '2-digit',
-  minute: '2-digit'
-})}
-
-DELIVERY ADDRESS:
-John Smith
-123 Main Street, Apt 4B
-New York, NY 10001
-United States
-
-ITEMS ORDERED:
-${cartItems.map(item => `${item.product.name} x${item.quantity} - $${(item.product.price * item.quantity).toFixed(2)}`).join('\n')}
-
-PAYMENT SUMMARY:
-Subtotal: $${subtotal.toFixed(2)}
-${appliedCoupon ? `Coupon (${appliedCoupon.code}): -$${couponDiscount.toFixed(2)}\n` : ''}Shipping: ${shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}
-Tax: $${tax.toFixed(2)}
-Total: $${total.toFixed(2)}
-
-Payment Method: ${paymentMethods.find(p => p.id === selectedPayment)?.name}
-
-Thank you for shopping with Amazon!
-    `.trim();
   };
 
   const handleCloseBill = () => {
@@ -169,13 +211,13 @@ Thank you for shopping with Amazon!
                 >
                   {receiptDownloaded ? (
                     <>
-                      <Check className="w-5 h-5" />
-                      <span>Downloaded</span>
+                      <FileText className="w-5 h-5" />
+                      <span>PDF Downloaded</span>
                     </>
                   ) : (
                     <>
                       <Download className="w-5 h-5" />
-                      <span>Download Receipt</span>
+                      <span>Download PDF</span>
                     </>
                   )}
                 </button>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, User, ShoppingCart, Menu, Scan } from 'lucide-react';
+import { Home, User, ShoppingCart, Menu, ShoppingBag } from 'lucide-react';
 
 interface BottomNavigationProps {
   activeTab: string;
@@ -37,7 +37,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
             onClick={onScanClick}
             className="bg-amazon-orange hover:bg-orange-600 text-white p-4 rounded-full shadow-xl transform hover:scale-105 transition-all duration-200 border-4 border-white"
           >
-            <Scan className="w-5 h-5" />
+            <ShoppingBag className="w-6 h-6" />
           </button>
           <div className="mt-1">
             <span className="text-xs text-amazon-orange font-medium whitespace-nowrap">Self Checkout</span>
