@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Camera, Mic, QrCode, MapPin } from 'lucide-react';
+import { Search, Camera, Mic, MapPin } from 'lucide-react';
 
 const AmazonHeader: React.FC = () => {
   return (
@@ -43,8 +43,11 @@ const AmazonHeader: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center space-x-4 text-sm">
-          <span>🔔</span>
-          <span>🛒</span>
+          <div className="relative">
+            <span className="text-lg">🔔</span>
+            <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
+          </div>
+          <span className="text-lg">🛒</span>
         </div>
       </div>
 
@@ -52,8 +55,9 @@ const AmazonHeader: React.FC = () => {
       <div className="px-4 pb-2">
         <div className="flex items-center text-sm">
           <MapPin className="w-4 h-4 mr-1" />
-          <span>Deliver to Ravi - Bengaluru 560067</span>
-          <span className="ml-1">▼</span>
+          <span className="text-gray-200">Deliver to</span>
+          <span className="ml-1 font-medium">Ravi - Bengaluru 560067</span>
+          <span className="ml-1 text-gray-300">▼</span>
         </div>
       </div>
 
@@ -81,6 +85,8 @@ const AmazonHeader: React.FC = () => {
           <ServiceCard icon="🥬" label="Fresh" color="bg-green-500" />
           <ServiceCard icon="🛍️" label="Fashion" color="bg-pink-500" />
           <ServiceCard icon="📱" label="Mobiles" color="bg-orange-500" />
+          <ServiceCard icon="🏠" label="Home" color="bg-indigo-500" />
+          <ServiceCard icon="🎮" label="Gaming" color="bg-red-500" />
         </div>
       </div>
     </div>
