@@ -67,15 +67,19 @@ function App() {
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-50 flex flex-col relative">
       <AmazonHeader />
       <AmazonContent />
-      <BottomNavigation
-        activeTab={activeTab}
-        onTabChange={handleTabChange}
-        cartItems={totalItems}
-        onScanClick={() => setIsScanModalOpen(true)}
-      />
+      
+      {/* Fixed Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 z-40">
+        <BottomNavigation
+          activeTab={activeTab}
+          onTabChange={handleTabChange}
+          cartItems={totalItems}
+          onScanClick={() => setIsScanModalOpen(true)}
+        />
+      </div>
 
       <ScanModal
         isOpen={isScanModalOpen}

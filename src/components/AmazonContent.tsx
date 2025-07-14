@@ -225,7 +225,8 @@ const AmazonContent: React.FC = () => {
         </div>
       </div>
 
-      <div className="h-24"></div>
+      {/* Bottom padding to account for fixed navigation */}
+      <div className="h-20 pb-4"></div>
     </div>
   );
 };

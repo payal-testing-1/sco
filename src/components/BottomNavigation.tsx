@@ -15,7 +15,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
   onScanClick
 }) => {
   return (
-    <div className="bg-white border-t border-gray-300 px-2 py-2 shadow-lg">
+    <div className="bg-white border-t border-gray-300 px-2 py-2 shadow-lg backdrop-blur-sm">
       <div className="flex items-center justify-around relative">
         <NavItem
           icon={Home}
