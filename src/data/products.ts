@@ -105,7 +105,7 @@ export const products: Product[] = [
     id: '11',
     name: 'Uncle Ben\'s Original Converted Rice 2lb',
     price: 3.99,
-    image: 'https://images.pexels.com/photos/33239/wheat-grain-agriculture-seed.jpg?auto=compress&cs=tinysrgb&w=400',
+    image: 'https://images.pexels.com/photos/4110256/pexels-photo-4110256.jpeg?auto=compress&cs=tinysrgb&w=400',
     barcode: '1357924680135',
     category: 'Groceries',
     rating: 4.5,

@@ -3,6 +3,38 @@ import { X, Scan, CheckCircle, AlertCircle, ShoppingCart } from 'lucide-react';
 import { Product, CartItem } from '../types';
 import { products } from '../data/products';
 
+const SessionTimer: React.FC = () => {
+  const [timeRemaining, setTimeRemaining] = useState('');
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const closing = new Date();
+      closing.setHours(23, 0, 0, 0); // 11:00 PM
+      
+      if (closing < now) {
+        closing.setDate(closing.getDate() + 1);
+      }
+      
+      const diff = closing.getTime() - now.getTime();
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      
+      setTimeRemaining(`${hours}h ${minutes}m until store closes`);
+    };
+    
+    updateTime();
+    const interval = setInterval(updateTime, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="text-xs text-gray-600 bg-yellow-50 px-2 py-1 rounded">
+      ⏰ {timeRemaining}
+    </div>
+  );
+};
+
 interface ScanModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -79,9 +111,12 @@ const ScanModal: React.FC<ScanModalProps> = ({
           <div>
             <h2 className="text-xl font-bold text-gray-800">Self Checkout</h2>
             {hasActiveSession && (
-              <div className="flex items-center space-x-2 mt-1">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-xs text-green-600 font-medium">Session Active</span>
+              <div className="mt-1">
+                <div className="flex items-center space-x-2 mb-1">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-xs text-green-600 font-medium">Session Active</span>
+                </div>
+                <SessionTimer />
               </div>
             )}
           </div>
