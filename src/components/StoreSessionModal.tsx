@@ -70,6 +70,12 @@ const StoreSessionModal: React.FC<StoreSessionModalProps> = ({
     setSessionStarted(false);
   };
 
+  // Reset modal state when it opens
+  useEffect(() => {
+    if (isOpen) {
+      resetModal();
+    }
+  }, [isOpen]);
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
@@ -92,16 +98,16 @@ const StoreSessionModal: React.FC<StoreSessionModalProps> = ({
             <div>
               {/* Store Info */}
               <div className="bg-blue-50 rounded-lg p-4 mb-6">
-                <div className="flex items-center space-x-3 mb-3">
+                <div className="flex items-start space-x-3 mb-3">
                   <MapPin className="w-5 h-5 text-blue-600" />
                   <div>
                     <h3 className="font-medium text-gray-800">{storeInfo.name}</h3>
                     <p className="text-sm text-gray-600">{storeInfo.address}</p>
                   </div>
                 </div>
-                <div className="flex items-center space-x-2 text-sm">
+                <div className="flex items-center space-x-2 text-sm mt-2">
                   <Clock className="w-4 h-4 text-blue-600" />
-                  <span className="text-gray-700">Closes at {storeInfo.closingTime}</span>
+                  <span className="text-gray-700 font-medium">Closes at {storeInfo.closingTime}</span>
                 </div>
               </div>
 
