@@ -311,3 +311,24 @@ body {
 .scan-button:active {
   transform: scale(0.95);
 }
+
+/* Responsive design */
+@media (min-width: 768px) {
+  .max-w-md {
+    max-width: 28rem;
+  }
+}
+
+/* Animation for modal slide up */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}

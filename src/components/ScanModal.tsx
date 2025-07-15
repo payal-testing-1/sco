@@ -8,13 +8,15 @@ interface ScanModalProps {
   onClose: () => void;
   onAddToCart: (item: CartItem) => void;
   cartItems: CartItem[];
+  hasActiveSession: boolean;
 }
 
 const ScanModal: React.FC<ScanModalProps> = ({
   isOpen,
   onClose,
   onAddToCart,
-  cartItems
+  cartItems,
+  hasActiveSession
 }) => {
   const [isScanning, setIsScanning] = useState(false);
   const [scannedProduct, setScannedProduct] = useState<Product | null>(null);
@@ -74,7 +76,15 @@ const ScanModal: React.FC<ScanModalProps> = ({
       <div className="bg-white rounded-lg w-full max-w-md">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="text-xl font-bold text-gray-800">Self-Scan Checkout</h2>
+          <div>
+            <h2 className="text-xl font-bold text-gray-800">Self Checkout</h2>
+            {hasActiveSession && (
+              <div className="flex items-center space-x-2 mt-1">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-xs text-green-600 font-medium">Session Active</span>
+              </div>
+            )}
+          </div>
           <button
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-full"

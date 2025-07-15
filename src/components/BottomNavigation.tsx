@@ -1,22 +1,22 @@
 import React from 'react';
-import { Home, User, ShoppingCart, Menu, ShoppingBag } from 'lucide-react';
+import { Home, User, ShoppingCart, Menu, MoreHorizontal } from 'lucide-react';
 
 interface BottomNavigationProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
   cartItems: number;
-  onScanClick: () => void;
+  onMoreClick: () => void;
 }
 
 const BottomNavigation: React.FC<BottomNavigationProps> = ({
   activeTab,
   onTabChange,
   cartItems,
-  onScanClick
+  onMoreClick
 }) => {
   return (
-    <div className="bg-white border-t border-gray-300 px-2 py-2 shadow-lg backdrop-blur-sm">
-      <div className="flex items-center justify-around relative">
+    <div className="bg-white border-t border-gray-300 px-2 py-2 shadow-lg backdrop-blur-sm fixed bottom-0 left-0 right-0 z-40">
+      <div className="flex items-center justify-around">
         <NavItem
           icon={Home}
           label="Home"
@@ -31,19 +31,6 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
           onClick={() => onTabChange('account')}
         />
         
-        {/* Self-Scan Button */}
-        <div className="relative flex flex-col items-center -mt-4">
-          <button
-            onClick={onScanClick}
-            className="bg-amazon-orange hover:bg-orange-600 text-white p-4 rounded-full shadow-xl transform hover:scale-105 transition-all duration-200 border-4 border-white"
-          >
-            <ShoppingBag className="w-6 h-6" />
-          </button>
-          <div className="mt-1">
-            <span className="text-xs text-amazon-orange font-medium whitespace-nowrap">Self Checkout</span>
-          </div>
-        </div>
-
         <NavItem
           icon={ShoppingCart}
           label="Cart"
@@ -51,11 +38,19 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
           onClick={() => onTabChange('cart')}
           badge={cartItems > 0 ? cartItems : undefined}
         />
+
         <NavItem
           icon={Menu}
           label="Menu"
           isActive={activeTab === 'menu'}
           onClick={() => onTabChange('menu')}
+        />
+
+        <NavItem
+          icon={MoreHorizontal}
+          label="More"
+          isActive={activeTab === 'more'}
+          onClick={onMoreClick}
         />
       </div>
     </div>
