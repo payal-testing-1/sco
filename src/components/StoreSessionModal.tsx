@@ -108,7 +108,7 @@ const StoreSessionModal: React.FC<StoreSessionModalProps> = ({
                 </div>
                 <div className="flex items-center space-x-2 text-sm mt-2">
                   <Clock className="w-4 h-4 text-blue-600" />
-                  <span className="text-gray-700 font-medium">Closes at {storeInfo.closingTime}</span>
+                  <span className="text-gray-700 font-medium ml-1">Closes at {storeInfo.closingTime}</span>
                 </div>
               </div>
 
