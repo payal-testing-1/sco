@@ -158,7 +158,11 @@ function App() {
     if (savedSession) {
       setCartItems(savedSession.cartItems);
       setHasActiveSession(savedSession.hasActiveSession);
-      setActiveTab('home'); // Navigate to home after resuming
+      setActiveTab('home');
+      // Open scan modal directly for continuing shopping
+      setTimeout(() => {
+        setIsScanModalOpen(true);
+      }, 100);
     }
     setIsSessionResumeModalOpen(false);
     setSavedSession(null);

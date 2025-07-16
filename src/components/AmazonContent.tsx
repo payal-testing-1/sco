@@ -98,7 +98,7 @@ const AmazonContent: React.FC = () => {
               </div>
               <button
                 onClick={handleResumeFromBanner}
-                className="bg-white text-green-700 px-3 py-1 rounded text-sm font-medium hover:bg-gray-100 transition-colors"
+                className="bg-white text-green-700 px-4 py-2 rounded text-sm font-medium hover:bg-gray-100 transition-colors"
               >
                 Continue Shopping
               </button>

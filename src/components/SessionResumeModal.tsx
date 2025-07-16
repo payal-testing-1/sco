@@ -144,15 +144,15 @@ const SessionResumeModal: React.FC<SessionResumeModalProps> = ({
           <div className="space-y-3">
             <button
               onClick={onResumeSession}
-              className="w-full bg-amazon-orange hover:bg-orange-600 text-white py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2 disabled:opacity-50"
+              className="w-full bg-amazon-orange hover:bg-orange-600 text-white py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
             >
               <ShoppingCart className="w-5 h-5" />
-              <span>Resume Shopping Session</span>
+              <span>Continue Shopping</span>
             </button>
             
             <button
               onClick={onStartFresh}
-              className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-lg font-medium transition-colors disabled:opacity-50"
+              className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-lg font-medium transition-colors"
             >
               Start Fresh Session
             </button>
