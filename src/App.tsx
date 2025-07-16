@@ -160,7 +160,8 @@ function App() {
       setHasActiveSession(savedSession.hasActiveSession);
       setActiveTab('home');
       // Open scan modal directly for continuing shopping
-      setTimeout(() => {
+      setTimeout(() => {enecccdedfukncvjrrnkhnbgviuleidlhuidlbtkjruk
+                        
         setIsScanModalOpen(true);
       }, 100);
     }
