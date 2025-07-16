@@ -91,7 +91,7 @@ function App() {
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col relative max-w-md mx-auto">
+    <div className="min-h-screen bg-gray-50 flex flex-col relative max-w-md mx-auto overflow-hidden">
       <AmazonHeader />
       <AmazonContent />
       
