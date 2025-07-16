@@ -159,14 +159,11 @@ function App() {
       setCartItems(savedSession.cartItems);
       setHasActiveSession(savedSession.hasActiveSession);
       setActiveTab('home');
-      // Open scan modal directly for continuing shopping
-      setTimeout(() => {enecccdedfukncvjrrnkhnbgviuleidlhuidlbtkjruk
-                        
-        setIsScanModalOpen(true);
-      }, 100);
     }
     setIsSessionResumeModalOpen(false);
     setSavedSession(null);
+    // Open scan modal directly for continuing shopping
+    setIsScanModalOpen(true);
   };
 
   const handleStartFresh = () => {
