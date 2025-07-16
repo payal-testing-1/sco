@@ -17,9 +17,11 @@ const AmazonHeader: React.FC = () => {
           
           setHasActiveSession(
             sessionAge < maxAge && 
-            session.hasActiveSession && 
+            (session.hasActiveSession || session.cartItems.length > 0)
             session.cartItems.length > 0
           );
+        } else {
+          setHasActiveSession(false);
         }
       } catch (error) {
         setHasActiveSession(false);
@@ -27,7 +29,15 @@ const AmazonHeader: React.FC = () => {
     };
 
     checkSession();
-    const interval = setInterval(checkSession, 30000); // Check every 30 seconds
+    
+    // Listen for storage changes to update session status
+    const handleStorageChange = () => {
+      checkSession();
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    const interval = setInterval(checkSession, 10000); // Check every 10 seconds
+    
     return () => clearInterval(interval);
   }, []);
 

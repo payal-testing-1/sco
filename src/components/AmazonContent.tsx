@@ -34,8 +34,22 @@ const AmazonContent: React.FC = () => {
   }, []);
 
   const handleResumeFromBanner = () => {
-    // Trigger the session resume modal by dispatching a custom event
-    window.dispatchEvent(new CustomEvent('resumeSession'));
+    try {
+      const saved = localStorage.getItem('amazonSession');
+      if (saved) {
+        const session = JSON.parse(saved);
+        const now = Date.now();
+        const sessionAge = now - session.timestamp;
+        const maxAge = 24 * 60 * 60 * 1000; // 24 hours
+        
+        if (sessionAge < maxAge && session.cartItems.length > 0) {
+          // Trigger the session resume modal by dispatching a custom event
+          window.dispatchEvent(new CustomEvent('resumeSession'));
+        }
+      }
+    } catch (error) {
+      console.error('Error resuming session:', error);
+    }
   };
 
   return (

@@ -158,6 +158,7 @@ function App() {
     if (savedSession) {
       setCartItems(savedSession.cartItems);
       setHasActiveSession(savedSession.hasActiveSession);
+      setActiveTab('home'); // Navigate to home after resuming
     }
     setIsSessionResumeModalOpen(false);
     setSavedSession(null);
@@ -165,8 +166,11 @@ function App() {
 
   const handleStartFresh = () => {
     localStorage.removeItem('amazonSession');
+    setCartItems([]);
+    setHasActiveSession(false);
     setIsSessionResumeModalOpen(false);
     setSavedSession(null);
+    setActiveTab('home');
   };
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
