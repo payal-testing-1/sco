@@ -17,7 +17,7 @@ const AmazonHeader: React.FC = () => {
           
           setHasActiveSession(
             sessionAge < maxAge && 
-            (session.hasActiveSession || session.cartItems.length > 0)
+            (session.hasActiveSession || session.cartItems.length > 0) &&
             session.cartItems.length > 0
           );
         } else {
